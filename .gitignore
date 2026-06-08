@@ -1,0 +1,50 @@
+# Flutter
+**/android/.gradle/
+**/ios/Pods/
+**/build/
+.dart_tool/
+.packages
+.pub-cache/
+.pub/
+pubspec.lock
+
+# IDE
+.idea/
+.vscode/
+*.iml
+*.swp
+*.swo
+
+# macOS
+.DS_Store
+*.plist
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Generated
+*.g.dart
+*.freezed.dart
+*.mocks.dart
+
+# Coverage
+coverage/
+lcov.info
+
+# Build artifacts
+*.apk
+*.aab
+*.ipa
+*.app
+
+# Node (if backend)
+node_modules/
+dist/
+.turbo/
+
+# Misc
+*.log
+.cache/
+tmp/
