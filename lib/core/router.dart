@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:go_router/go_router.dart';
 import 'package:cubby/features/auth/sign_in_screen.dart';
+import 'package:cubby/features/onboarding/onboarding_screen.dart';
 import 'package:cubby/features/shell/shell_screen.dart';
 import 'package:cubby/features/home/home_screen.dart';
 import 'package:cubby/features/inbox/inbox_screen.dart';
@@ -13,16 +13,20 @@ final router = GoRouter(
   initialLocation: '/',
   redirect: (context, state) {
     final loggedIn = FirebaseAuth.instance.currentUser != null;
-    final onSignIn = state.matchedLocation == '/sign-in';
+    final path = state.matchedLocation;
 
-    if (!loggedIn && !onSignIn) return '/sign-in';
-    if (loggedIn && onSignIn) return '/';
+    if (!loggedIn && path != '/sign-in') return '/sign-in';
+    if (loggedIn && path == '/sign-in') return '/';
     return null;
   },
   routes: [
     GoRoute(
       path: '/sign-in',
       builder: (context, state) => const SignInScreen(),
+    ),
+    GoRoute(
+      path: '/onboarding',
+      builder: (context, state) => const OnboardingScreen(),
     ),
     StatefulShellRoute.indexedStack(
       builder: (context, state, navigationShell) {

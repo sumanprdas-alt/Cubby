@@ -1,15 +1,18 @@
 import 'package:drift/drift.dart';
+
 part 'database.g.dart';
+
 // ─── TABLE DEFINITIONS ────────────────────────────
 
+@DataClassName('CubbyUser')
 class Users extends Table {
   TextColumn get id => text()();
   TextColumn get firebaseUid => text().unique()();
   TextColumn get familyId => text().nullable()();
-  TextColumn get familyMemberId => text().nullable()(); // which FamilyMember this user is
+  TextColumn get familyMemberId => text().nullable()();
   TextColumn get phoneNumber => text().nullable()();
   TextColumn get displayName => text().nullable()();
-  TextColumn get role => text().withDefault(const Constant('parent'))(); // parent | child | grandparent | caregiver
+  TextColumn get role => text().withDefault(const Constant('parent'))();
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
   DateTimeColumn get lastSignedInAt => dateTime().nullable()();
 
@@ -20,11 +23,11 @@ class Users extends Table {
 class FamilyInvites extends Table {
   TextColumn get id => text()();
   TextColumn get familyId => text().references(Families, #id)();
-  TextColumn get invitedBy => text()(); // user id of inviter
+  TextColumn get invitedBy => text()();
   TextColumn get phoneNumber => text().nullable()();
   TextColumn get token => text().unique()();
   TextColumn get role => text().withDefault(const Constant('parent'))();
-  TextColumn get status => text().withDefault(const Constant('pending'))(); // pending | accepted | expired | revoked
+  TextColumn get status => text().withDefault(const Constant('pending'))();
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
   DateTimeColumn get expiresAt => dateTime()();
   DateTimeColumn get acceptedAt => dateTime().nullable()();
@@ -33,6 +36,7 @@ class FamilyInvites extends Table {
   Set<Column> get primaryKey => {id};
 }
 
+@DataClassName("CubbyFamily")
 class Families extends Table {
   TextColumn get id => text()();
   TextColumn get name => text().withLength(min: 1, max: 100)();
@@ -48,9 +52,9 @@ class FamilyMembers extends Table {
   TextColumn get id => text()();
   TextColumn get familyId => text().references(Families, #id)();
   TextColumn get name => text().withLength(min: 1, max: 100)();
-  TextColumn get type => text()(); // person | pet
-  TextColumn get role => text().nullable()(); // parent | child | grandparent | caregiver
-  TextColumn get species => text().nullable()(); // dog | cat | bird | fish | other
+  TextColumn get type => text()();
+  TextColumn get role => text().nullable()();
+  TextColumn get species => text().nullable()();
   TextColumn get breed => text().nullable()();
   TextColumn get avatarColor => text().nullable()();
   DateTimeColumn get dateOfBirth => dateTime().nullable()();
@@ -58,7 +62,7 @@ class FamilyMembers extends Table {
   TextColumn get allergies => text().nullable()();
   TextColumn get medicalConditions => text().nullable()();
   TextColumn get emergencyContact => text().nullable()();
-  TextColumn get customFields => text().nullable()(); // JSON string
+  TextColumn get customFields => text().nullable()();
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
   DateTimeColumn get updatedAt => dateTime().withDefault(currentDateAndTime)();
   BoolColumn get isActive => boolean().withDefault(const Constant(true))();
@@ -89,7 +93,7 @@ class Properties extends Table {
   TextColumn get familyId => text().references(Families, #id)();
   TextColumn get name => text().withLength(min: 1, max: 200)();
   TextColumn get address => text().nullable()();
-  TextColumn get propertyType => text().nullable()(); // rent | own
+  TextColumn get propertyType => text().nullable()();
   DateTimeColumn get tenancyStart => dateTime().nullable()();
   DateTimeColumn get tenancyEnd => dateTime().nullable()();
   TextColumn get landlordName => text().nullable()();
@@ -106,25 +110,25 @@ class FamilyItems extends Table {
   TextColumn get id => text()();
   TextColumn get familyId => text().references(Families, #id)();
   TextColumn get title => text()();
-  TextColumn get documentType => text()(); // visa, passport, prescription, etc.
-  TextColumn get status => text().withDefault(const Constant('pending'))(); // queued | pending | confirmed | archived
-  TextColumn get confidence => text().nullable()(); // high | medium | low
-  TextColumn get inputType => text().nullable()(); // document | event | both
-  TextColumn get source => text().nullable()(); // camera | gallery | share_sheet | manual
+  TextColumn get documentType => text()();
+  TextColumn get status => text().withDefault(const Constant('pending'))();
+  TextColumn get confidence => text().nullable()();
+  TextColumn get inputType => text().nullable()();
+  TextColumn get source => text().nullable()();
   TextColumn get filePath => text().nullable()();
   TextColumn get cubbyFilename => text().nullable()();
   TextColumn get originalFilename => text().nullable()();
   TextColumn get remoteUrl => text().nullable()();
   TextColumn get thumbnailPath => text().nullable()();
-  TextColumn get extractedFields => text().nullable()(); // JSON string
-  TextColumn get rawAiResponse => text().nullable()(); // JSON string
+  TextColumn get extractedFields => text().nullable()();
+  TextColumn get rawAiResponse => text().nullable()();
   TextColumn get notes => text().nullable()();
-  TextColumn get tags => text().nullable()(); // JSON array string
+  TextColumn get tags => text().nullable()();
   DateTimeColumn get expiryDate => dateTime().nullable()();
   DateTimeColumn get eventDate => dateTime().nullable()();
-  TextColumn get eventTime => text().nullable()(); // HH:MM
+  TextColumn get eventTime => text().nullable()();
   TextColumn get summary => text().nullable()();
-  TextColumn get imageHash => text().nullable()(); // perceptual hash for duplicate detection
+  TextColumn get imageHash => text().nullable()();
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
   DateTimeColumn get updatedAt => dateTime().withDefault(currentDateAndTime)();
   DateTimeColumn get confirmedAt => dateTime().nullable()();
@@ -155,8 +159,8 @@ class Reminders extends Table {
   TextColumn get body => text().nullable()();
   DateTimeColumn get dueDate => dateTime()();
   DateTimeColumn get remindAt => dateTime()();
-  TextColumn get ruleType => text().nullable()(); // passport | visa | insurance | vaccination | medication | tenancy | custom
-  TextColumn get status => text().withDefault(const Constant('pending'))(); // pending | notified | dismissed | completed
+  TextColumn get ruleType => text().nullable()();
+  TextColumn get status => text().withDefault(const Constant('pending'))();
   BoolColumn get isManual => boolean().withDefault(const Constant(false))();
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
   DateTimeColumn get updatedAt => dateTime().withDefault(currentDateAndTime)();
@@ -172,7 +176,7 @@ class UserCorrections extends Table {
   TextColumn get correctedType => text().nullable()();
   TextColumn get originalPerson => text().nullable()();
   TextColumn get correctedPerson => text().nullable()();
-  TextColumn get correctedFields => text().nullable()(); // JSON string
+  TextColumn get correctedFields => text().nullable()();
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
 
   @override
@@ -181,11 +185,11 @@ class UserCorrections extends Table {
 
 class SyncQueue extends Table {
   TextColumn get id => text()();
-  TextColumn get tableName => text()();
+  TextColumn get syncTable => text()();
   TextColumn get recordId => text()();
-  TextColumn get operation => text()(); // insert | update | delete
-  TextColumn get payload => text()(); // JSON string
-  TextColumn get status => text().withDefault(const Constant('pending'))(); // pending | synced | failed
+  TextColumn get operation => text()();
+  TextColumn get payload => text()();
+  TextColumn get status => text().withDefault(const Constant('pending'))();
   IntColumn get retryCount => integer().withDefault(const Constant(0))();
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
   DateTimeColumn get syncedAt => dateTime().nullable()();
